@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Store</title>
+</head>
+<body>
+<div style="margin: 30px; display: grid; grid-template-columns: 1fr 1fr">
+    <div>
+        <h4>Edit item:</h4>
+        <form action="/profile/edit/<%= item.item_id %>" method="post" autocomplete="off">
+            <label>Item name:</label><br>
+            <input type="text" name="name"/><br><br>
+            <label>Price:</label><br>
+            <input type="number" name="price"/><br><br>
+            <label>Size:</label><br>
+            <input type="number" name="size"/><br><br>
+            <label>City:</label><br>
+            <input type="text" name="city"/><br><br>
+            <input type="submit" value="Add item"/>
+        </form>
+    </div>
+    <div style="font-size: 18pt">
+        <h4>Old details about item:</h4>
+        <br>
+        <p>Item name: <%= item.item_name %></p>
+        <p>Price: <%= item.price %></p>
+        <p>Size: <%= item.size %></p>
+        <p>City: <%= item.city %></p>
+
+    </div>
+
+</div>
+</body>
+</html>

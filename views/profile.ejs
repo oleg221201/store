@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Store</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/main">Main</a>
+            <a class="nav-item nav-link" href="/profile">Profile</a>
+            <a class="nav-item nav-link" href="/sign_out">Sign out</a>
+        </div>
+    </div>
+</nav>
+<div style="margin: 30px; font-size: 16pt">
+    <h3>Signed in as <%= userName%></h3>
+    <p>id: <%= userID%></p>
+    <br>
+    <div style="display: grid; grid-template-columns: 2fr 3fr">
+        <div>
+            <h4>Add item</h4>
+            <form action="/profile" method="post" autocomplete="off">
+                <label>Item name:</label><br>
+                <input type="text" name="name"/><br><br>
+                <label>Price:</label><br>
+                <input type="number" name="price"/><br><br>
+                <label>Size:</label><br>
+                <input type="number" name="size"/><br><br>
+                <label>City:</label><br>
+                <input type="text" name="city"/><br><br>
+                <input type="submit" value="Add item"/>
+            </form>
+        </div>
+        <div>
+            <h4>My items:</h4>
+            <ul>
+                <% for (let i = 0; i < items.length; i++) { %>
+                    <li>
+                        <h5><%= items[i].item_name %></h5>
+                        <div style="font-size: 12pt; display: grid; grid-template-columns: 1fr 1fr 2fr 15fr">
+                            <button onclick='location.href="/profile/edit/<%=items[i].item_id%>"' style="margin: 5px">Edit</button>
+                            <button onclick='location.href="/profile/delete/<%=items[i].item_id%>"' style="margin: 5px">Delete</button>
+                            <a style="margin: 5px" href="/profile/<%=items[i].item_id%>">See more...</a>
+                        </div>
+                    </li>
+                    <br>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Store</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/registration">Registration</a>
+            <a class="nav-item nav-link" href="/sign_in">Sign in</a>
+        </div>
+    </div>
+</nav>
+<div style="margin: 30px; font-size: 16pt">
+    <h2>Registration</h2>
+    <form action="/registration" method="post" autocomplete="off">
+        <label>Username:</label><br>
+        <input type="text" name="username" /><br><br>
+        <label>Password:</label><br>
+        <input type="password" name="password" /><br><br>
+        <input type="submit" value="Submit" />
+    </form>
+</div>
+</body>
+</html>

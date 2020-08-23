@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Store</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/main">Main</a>
+            <a class="nav-item nav-link" href="/profile">Profile</a>
+            <a class="nav-item nav-link" href="/sign_out">Sign out</a>
+        </div>
+    </div>
+</nav>
+<div style="margin: 30px">
+    <div style="display:grid; grid-template-columns: 2fr 2fr 1fr">
+        <div>
+            <h5>Sort by:</h5>
+            <form action="/main/sort" method="post" style="font-size: 16pt;">
+                <p><select size="1" name="sortType">
+                        <option></option>
+                        <option>Price min->max</option>
+                        <option>Price max->min</option>
+                        <option>Size min->max</option>
+                        <option>Size max->min</option>
+                        <option>Owner</option>
+                        <option>City</option>
+                    </select></p>
+                <p><input type="submit" value="Sort"/></p>
+            </form>
+        </div>
+        <div>
+            <h5>Filter:</h5>
+            <form action="/main/filter" method="post" style="font-size: 16pt;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr">
+                    <p style="margin: 0px 10px">Price:</p>
+                    <p style="margin: 0px 10px">from:</p>
+                    <p style="margin: 0px 10px"><input type="number" name="price_from"/></p>
+                    <p style="margin: 0px 10px">to:</p>
+                    <p style="margin: 0px 10px"><input type="number" name="price_to"/></p>
+                </div>
+                <br>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr">
+                    <p style="margin: 0px 10px">Size:</p>
+                    <p style="margin: 0px 10px">from:</p>
+                    <p style="margin: 0px 10px"><input type="number" name="size_from"/></p>
+                    <p style="margin: 0px 10px">to:</p>
+                    <p style="margin: 0px 10px"><input type="number" name="size_to"/></p>
+                </div>
+                <br>
+                <div style="display: grid; grid-template-columns: 1fr 5fr">
+                    <p style="margin: 0px 10px">City:</p>
+                    <p>
+                        <select size="1" name="city">
+                            <option></option>
+                            <% for (let i = 0; i < cities.length; i++) { %>
+                                <option><%= cities[i].city %></option>
+                            <% } %>
+                        </select>
+                    </p>
+                </div>
+                <p><input type="submit" value="Filter"></p>
+            </form>
+        </div>
+    </div>
+    <br>
+    <h3>Items:</h3>
+    <ul>
+        <% if (items.length === 0) { %><h5>no items...</h5>
+        <% } %>
+        <% for (let i = 0; i < items.length; i++) { %>
+            <li>
+                <h5><%= items[i].item_name %></h5>
+                <a href="/main/<%= items[i].item_id %>">See more...</a>
+            </li>
+            <br>
+        <% } %>
+    </ul>
+</div>
+</body>
+</html>
