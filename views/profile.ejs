@@ -42,9 +42,9 @@
                     <li>
                         <h5><%= items[i].item_name %></h5>
                         <div style="font-size: 12pt; display: grid; grid-template-columns: 1fr 1fr 2fr 15fr">
-                            <button onclick='location.href="/profile/edit/<%=items[i].item_id%>"' style="margin: 5px">Edit</button>
-                            <button onclick='location.href="/profile/delete/<%=items[i].item_id%>"' style="margin: 5px">Delete</button>
-                            <a style="margin: 5px" href="/profile/<%=items[i].item_id%>">See more...</a>
+                            <button onclick='location.href="/profile/edit/<%=items[i].id%>"' style="margin: 5px">Edit</button>
+                            <button onclick='location.href="/profile/delete/<%=items[i].id%>"' style="margin: 5px">Delete</button>
+                            <a style="margin: 5px" href="/profile/<%=items[i].id%>">See more...</a>
                         </div>
                     </li>
                     <br>

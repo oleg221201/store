@@ -1,11 +1,10 @@
 const express = require("express")
 const router = express.Router()
-const pool = require('../db')
+const models = require('../db_models')
 
-router.get('/', (req, res) => {
-    let cleanCommand = "TRUNCATE TABLE currentUser"
-    pool.query(cleanCommand, (error, result) => {
-        if (error) return console.log("Bad request to db")
+router.get('/', async (req, res) => {
+    await models.CurrentUser.destroy({
+        truncate: true
     })
     res.render('start_page')
 })

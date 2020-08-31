@@ -10,7 +10,7 @@
 <div style="margin: 30px; display: grid; grid-template-columns: 1fr 1fr">
     <div>
         <h4>Edit item:</h4>
-        <form action="/profile/edit/<%= item.item_id %>" method="post" autocomplete="off">
+        <form action="/profile/edit/<%= item.id %>" method="post" autocomplete="off">
             <label>Item name:</label><br>
             <input type="text" name="name"/><br><br>
             <label>Price:</label><br>
@@ -19,7 +19,7 @@
             <input type="number" name="size"/><br><br>
             <label>City:</label><br>
             <input type="text" name="city"/><br><br>
-            <input type="submit" value="Add item"/>
+            <input type="submit" value="Edit item"/>
         </form>
     </div>
     <div style="font-size: 18pt">
@@ -29,9 +29,7 @@
         <p>Price: <%= item.price %></p>
         <p>Size: <%= item.size %></p>
         <p>City: <%= item.city %></p>
-
     </div>
-
 </div>
 </body>
 </html>

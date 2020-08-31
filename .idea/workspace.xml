@@ -3,12 +3,49 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="17dffc5b-182d-4704-aebd-ea20b0cce399" name="Default Changelist" comment="" />
+    <list default="true" id="17dffc5b-182d-4704-aebd-ea20b0cce399" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/db_models.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AuthorizationController.js" beforeDir="false" afterPath="$PROJECT_DIR$/AuthorizationController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ItemsController.js" beforeDir="false" afterPath="$PROJECT_DIR$/ItemsController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.js" beforeDir="false" afterPath="$PROJECT_DIR$/db.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/profile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/start_page.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/start_page.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/edit_item.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/edit_item.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/main.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/main.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/profile.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/profile.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/sign_in.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/sign_in.ejs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1gVzEs15UpyoPktrMhx0DZhwT4q" />
   <component name="ProjectViewState">
@@ -23,6 +60,11 @@
     <property name="settings.editor.selected.configurable" value="configurable.group.tools" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -31,11 +73,41 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1598214438755</updated>
-      <workItem from="1598214439807" duration="450000" />
+      <workItem from="1598214439807" duration="1353000" />
+      <workItem from="1598891413807" duration="1140000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1257" height="266" key="GridCell.Tab.0.bottom" timestamp="1598215793132">
+      <screen x="1920" y="0" width="1280" height="1024" />
+    </state>
+    <state width="1257" height="266" key="GridCell.Tab.0.bottom/0.27.1920.1053/1920.0.1280.1024@1920.0.1280.1024" timestamp="1598215793132" />
+    <state width="1257" height="266" key="GridCell.Tab.0.center" timestamp="1598215793132">
+      <screen x="1920" y="0" width="1280" height="1024" />
+    </state>
+    <state width="1257" height="266" key="GridCell.Tab.0.center/0.27.1920.1053/1920.0.1280.1024@1920.0.1280.1024" timestamp="1598215793132" />
+    <state width="1257" height="266" key="GridCell.Tab.0.left" timestamp="1598215793131">
+      <screen x="1920" y="0" width="1280" height="1024" />
+    </state>
+    <state width="1257" height="266" key="GridCell.Tab.0.left/0.27.1920.1053/1920.0.1280.1024@1920.0.1280.1024" timestamp="1598215793131" />
+    <state width="1257" height="266" key="GridCell.Tab.0.right" timestamp="1598215793132">
+      <screen x="1920" y="0" width="1280" height="1024" />
+    </state>
+    <state width="1257" height="266" key="GridCell.Tab.0.right/0.27.1920.1053/1920.0.1280.1024@1920.0.1280.1024" timestamp="1598215793132" />
   </component>
 </project>

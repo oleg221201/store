@@ -1,157 +1,189 @@
-const pool = require("./db")
+const models = require('./db_models')
+const {Op} = require("sequelize");
 
 class ItemsController {
-    async display(req, res) {
-        let command = "SELECT * FROM items WHERE item_id = $1"
-        await pool.query(command, [req.params.item_id], async (error, result) => {
-            if (error) return console.log("Bad request to db")
-            let command1 = "SELECT * FROM users WHERE user_id = $1"
-            await pool.query(command1, [result.rows[0].owner_id], async (error1, result1) => {
-                if (error1) return res.render('error', {props: "Bad request to db"})
-                let userName = result1.rows[0].username
-                res.render('item_details', {item: result.rows[0], userName: userName})
+    display(req, res) {
+        models.Item.findOne({raw: true, where: {id: req.params.item_id}}).then(result => {
+            models.User.findByPk(result.userId, {raw: true}).then(result1 => {
+                let userName = result1.username
+                return res.render('item_details', {item: result, userName: userName})
+            }).catch(err => {
+                console.log(err.message);
+                res.render('error', {props: "Bad request to db users"})
             })
+        }).catch(err => {
+            console.log(err.message);
+            res.render('error', {props: "Bad request to db items"})
         })
     }
 
-    async main_display(req, res) {
-        let command = "SELECT * FROM items WHERE item_id = $1"
-        await pool.query(command, [req.params.item_id], (error, result) => {
-            if (error) return console.log("Bad request to db")
-            res.render('item_details', {item: result.rows[0]})
-        })
-    }
-
-    async create(req, res) {
+    create(req, res) {
         if (!req.body) return res.sendStatus(400)
         if (req.body.name === "" || req.body.price === "" ||
             req.body.size === "" || req.body.city === "") {
             res.render('error', {props: "Empty input"})
         } else {
-            pool.query("SELECT * FROM currentUser", (error, result) => {
-                if (error) return res.render('error', {props: "Bad request to db"})
-                let item = [result.rows[0].user_id, req.body.name,
-                    req.body.price, req.body.size, req.body.city]
-                let command = "INSERT INTO items (owner_id, item_name, price, size, city) VALUES ($1, $2, $3, $4, $5)"
-                pool.query(command, item, (error1, result1) => {
-                    if (error1) return res.render('error', {props: "Bad request to db"})
-                    res.redirect('/main')
+            models.CurrentUser.findAll({raw: true}).then(result => {
+                console.log(result[0].user_id)
+                models.User.findByPk(result[0].user_id).then(result1 => {
+                    result1.createItem({
+                        item_name: req.body.name, price: req.body.price,
+                        size: req.body.size, city: req.body.city
+                    }).then(result2 => {
+                        res.redirect('/main')
+                    }).catch(err => {
+                        console.log(err.message);
+                        res.render('error', {props: "Bad request to db items"})
+                    })
+                }).catch(err => {
+                    console.log(err.message);
+                    res.render('error', {props: "Bad request to db users"})
                 })
+            }).catch(err => {
+                console.log(err.message);
+                res.render('error', {props: "Bad request to db currentuser"})
             })
         }
     }
 
-    async change(req, res) {
+    change(req, res) {
         if (!req.body) return res.sendStatus(400)
         if (req.body.name === "" || req.body.price === "" ||
             req.body.size === "" || req.body.city === "") {
             res.render('error', {props: "Empty input"})
         } else {
-            let command = "UPDATE items SET item_name = $1, price = $2, size = $3, city = $4 WHERE item_id = $5"
-            let data = [req.body.name, req.body.price, req.body.size, req.body.city, req.params.item_id]
-            await pool.query(command, data, (error, result) => {
-                if (error) return res.render('error', {props: "Bad request to db"})
+            console.log(req.params.item_id)
+            models.Item.update({
+                item_name: req.body.name, price: req.body.price,
+                size: req.body.size, city: req.body.city
+            }, {where: {id: req.params.item_id}}).then(result => {
                 res.redirect("/profile")
+            }).catch(err => {
+                console.log(err.message);
+                res.render('error', {props: "Bad request to db items"})
             })
         }
     }
 
-    async open_edit_page(req, res) {
-        let command = "SELECT * FROM items WHERE item_id = $1"
-        await pool.query(command, [req.params.item_id], (error, result) => {
-            if (error) return console.log("Bad request to db")
-            res.render('edit_item', {item: result.rows[0]})
+    open_edit_page(req, res) {
+        models.Item.findByPk(req.params.item_id, {raw: true}).then(result => {
+            res.render('edit_item', {item: result})
+        }).catch(err => {
+            console.log(err.message);
+            res.render('error', {props: "Bad request to db items"})
         })
     }
 
-    async delete(req, res) {
-        let command = "DELETE FROM items WHERE item_id = $1"
-        await pool.query(command, [req.params.item_id], (error, result) => {
-            if (error) return res.render('error', {props: "Bad request to db"})
+    delete(req, res) {
+        models.Item.destroy({where: {id: req.params.item_id}}).then(result => {
+            res.redirect('/profile')
+        }).catch(err => {
+            console.log(err.message);
+            res.render('error', {props: "Bad request to db items"})
         })
-        res.redirect('/profile')
     }
 
-    async filter(req, res){
+    filter(req, res) {
         if (!req.body) return res.sendStatus(400)
-        let command = "SELECT * FROM items WHERE"
-        if (req.body.price_from !== "") command += " price>=" + req.body.price_from
-        if (req.body.price_to !== "") {
-            if (command.slice(-1) === 'E') command += " price<=" + req.body.price_to
-            else command += " AND price<=" + req.body.price_to
+        let command = {}
+        if (req.body.price_from !== "" && req.body.price_to !== "") {
+            command.price = {[Op.between]: [parseInt(req.body.price_from), parseInt(req.body.price_to)]}
+        } else {
+            if (req.body.price_from !== "") command.price = {[Op.gte]: parseInt(req.body.price_from)}
+            if (req.body.price_to !== "") command.price = {[Op.lte]: parseInt(req.body.price_to)}
         }
-        if (req.body.size_from !== "") {
-            if (command.slice(-1) === 'E') command += " size>=" + req.body.size_from
-            else command += " AND size>=" + req.body.size_from
+        if (req.body.size_from !== "" && req.body.size_to !== "") {
+            command.size = {[Op.between]: [parseInt(req.body.size_from), parseInt(req.body.size_to)]}
+        } else {
+            if (req.body.size_from !== "") command.size = {[Op.gte]: parseInt(req.body.size_from)}
+            if (req.body.size_to !== "") command.size = {[Op.lte]: parseInt(req.body.size_to)}
         }
-        if (req.body.size_to !== "") {
-            if (command.slice(-1) === 'E') command += " size<=" + req.body.size_to
-            else command += " AND size<=" + req.body.size_to
-        }
-        if (req.body.city !== "") {
-            if (command.slice(-1) === 'E') command += " city='" + req.body.city + "'"
-            else command += " AND city='" + req.body.city + "'"
-        }
-        if (command === "SELECT * FROM items WHERE") return res.render('error', {props: "No filter data"})
-        await pool.query(command, async (error, result) => {
-            if (error) return res.render('error', {props: "Bad request to db"})
-            await pool.query("SELECT city FROM items", (err, result1) => {
-                if (err) return res.sendStatus(400)
-                res.render('main', {items: result.rows, cities: result1.rows})
+        if (req.body.city !== "") command.city = {[Op.eq]: req.body.city}
+        if (Object.keys(command).length === 0) return res.render('error', {props: "No filter data"})
+
+        models.Item.findAll({where: command, raw: true}).then(result => {
+            models.Item.findAll({attributes: ['city'], raw: true}).then(result1 => {
+                let cities = [], arr = []
+                for (let i = 0; i < result1.length; i++) {
+                    if (!arr.includes(result1[i].city)) {
+                        cities.push({city: result1[i].city}), arr.push(result1[i].city)
+                    }
+                }
+                res.render('main', {items: result, cities: cities})
+            }).catch(err => {
+                console.log(err.message);
+                res.render('error', {props: "Bad request to db items"})
             })
+        }).catch(err => {
+            console.log(err.message);
+            res.render('error', {props: "Bad request to db items"})
         })
     }
 
-    async sort(req, res) {
+    sort(req, res) {
         if (!req.body) return res.sendStatus(400)
-        await pool.query("SELECT city FROM items", async (err, result1) => {
-            if (err) return res.sendStatus(400)
+        models.Item.findAll({attributes: ['city'], raw: true}).then(result1 => {
+            let cities = [], arr = []
+            for (let i = 0; i < result1.length; i++) {
+                if (!arr.includes(result1[i].city)) {
+                    cities.push({city: result1[i].city}), arr.push(result1[i].city)
+                }
+            }
             switch (req.body.sortType) {
                 case "Price max->min":
-                    let command1 = "SELECT * FROM ITEMS ORDER BY price DESC"
-                    await pool.query(command1, (error, result) => {
-                        if (error) return res.render('error', {props: "Bad request to db"})
-                        res.render('main', {items: result.rows, cities: result1.rows})
+                    models.Item.findAll({raw: true, order: [["price", "DESC"]]}).then(result => {
+                        res.render('main', {items: result, cities: cities})
+                    }).catch(err => {
+                        console.log(err.message);
+                        res.render('error', {props: "Bad request to db items"})
                     })
                     break
                 case "Price min->max":
-                    let command2 = "SELECT * FROM ITEMS ORDER BY price"
-                    await pool.query(command2, (error, result) => {
-                        if (error) return res.render('error', {props: "Bad request to db"})
-                        res.render('main', {items: result.rows, cities: result1.rows})
+                    models.Item.findAll({raw: true, order: ["price"]}).then(result => {
+                        res.render('main', {items: result, cities: cities})
+                    }).catch(err => {
+                        console.log(err.message);
+                        res.render('error', {props: "Bad request to db items"})
                     })
                     break
                 case "Size max->min":
-                    let command3 = "SELECT * FROM ITEMS ORDER BY size DESC"
-                    await pool.query(command3, (error, result) => {
-                        if (error) return res.render('error', {props: "Bad request to db"})
-                        res.render('main', {items: result.rows, cities: result1.rows})
+                    models.Item.findAll({raw: true, order: [["size", "DESC"]]}).then(result => {
+                        res.render('main', {items: result, cities: cities})
+                    }).catch(err => {
+                        console.log(err.message);
+                        res.render('error', {props: "Bad request to db items"})
                     })
                     break
                 case "Size min->max":
-                    let command4 = "SELECT * FROM ITEMS ORDER BY size"
-                    await pool.query(command4, (error, result) => {
-                        if (error) return res.render('error', {props: "Bad request to db"})
-                        res.render('main', {items: result.rows, cities: result1.rows})
+                    models.Item.findAll({raw: true, order: ["size"]}).then(result => {
+                        res.render('main', {items: result, cities: cities})
+                    }).catch(err => {
+                        console.log(err.message);
+                        res.render('error', {props: "Bad request to db items"})
                     })
                     break
                 case "Owner":
-                    let command5 = "SELECT * FROM ITEMS ORDER BY owner_id"
-                    await pool.query(command5, (error, result) => {
-                        if (error) return res.render('error', {props: "Bad request to db"})
-                        res.render('main', {items: result.rows, cities: result1.rows})
+                    models.Item.findAll({raw: true, order: ["userId"]}).then(result => {
+                        res.render('main', {items: result, cities: cities})
+                    }).catch(err => {
+                        console.log(err.message);
+                        res.render('error', {props: "Bad request to db items"})
                     })
                     break
                 case 'City':
-                    let command6 = "SELECT * FROM ITEMS ORDER BY city"
-                    await pool.query(command6, (error, result) => {
-                        if (error) return res.render('error', {props: "Bad request to db"})
-                        res.render('main', {items: result.rows, cities: result1.rows})
+                    models.Item.findAll({raw: true, order: ["city"]}).then(result => {
+                        res.render('main', {items: result, cities: cities})
+                    }).catch(err => {
+                        console.log(err.message);
+                        res.render('error', {props: "Bad request to db items"})
                     })
                     break
                 default:
                     res.render('error', {props: "No sort data"})
             }
+        }).catch(err => {
+            console.log(err.message);
+            res.render('error', {props: "Bad request to db items"})
         })
     }
 }

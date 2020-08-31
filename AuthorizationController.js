@@ -1,4 +1,4 @@
-const pool = require("./db")
+const models = require("./db_models")
 
 class AuthorizationController {
     async registration(req, res) {
@@ -7,26 +7,22 @@ class AuthorizationController {
             return res.render('error', {props: "Empty input"})
         }
         let name = req.body.username
-        let command = "SELECT * FROM users WHERE username = ($1)"
-        await pool.query(command, [name], async (error, result) => {
-            if (error) return res.render('error', {props: "Bad request to db"})
-            if (result.rows.length === 0) {
-                let user = [req.body.username, req.body.password]
-                let command1 = "INSERT INTO users (username, password) VALUES ($1, $2)"
-                await pool.query(command1, user, (error, result) => {
-                    if (error) return res.sendStatus(400)
-                    console.log(result)
-                })
-                pool.query("SELECT * FROM users WHERE username = ($1) AND password = ($2)", user, (error, result) => {
-                    if (error) return console.log("Bad request to db")
-                    let userID = result.rows[0].user_id
-                    let userName = result.rows[0].username
-                    addCurrentUser(userID, userName)
-                })
-                res.redirect("/profile")
+        await models.User.findOne({where: {username: name}}).then(async result => {
+            if (result === null) {
+                await models.User.create({username: req.body.username, password: req.body.password})
+                    .then(result1 => {
+                        addCurrentUser(result1.dataValues.id, req.body.username)
+                    })
+                    .catch(err => {
+                        res.render('error', {props: "Bad request to db users"})
+                    })
+                res.redirect("/main")
             } else {
                 res.render('error', {props: "User exists"})
             }
+        }).catch(err => {
+            console.log(err.message);
+            res.render('error', {props: "Bad request to db users"})
         })
     }
 
@@ -35,43 +31,33 @@ class AuthorizationController {
         if (req.body.username === "" || req.body.password === "") {
             return res.render('error', {props: "Empty input"})
         }
-        let user = [req.body.username, req.body.password]
-        let command = "SELECT * FROM users WHERE username = ($1) AND password = ($2)"
-        await pool.query(command, user, (error, result) => {
-            if (error) return res.render('error', {props: "Bad request to db"})
-            if (result.rows.length === 0) {
+        await models.User.findOne({where: {username: req.body.username, password: req.body.password}}).then(result => {
+            if (result === null) {
                 res.render('error', {props: "Incorrect data"})
             } else {
-                let userID = result.rows[0].user_id
-                let userName = result.rows[0].username
-                addCurrentUser(userID, userName)
-                res.redirect("/profile")
+                addCurrentUser(result.dataValues.id, req.body.username)
+                res.redirect("/main")
             }
+        }).catch(err => {
+            console.log(err.message);
+            res.render('error', {props: "Bad request to db users"})
         })
     }
-
-    // This part of code doesn't work
-    // If i call this func, result will be undefined
-    // getCurrentUserID() {
-    //     let userID = pool.query("SELECT * FROM currentUser", (error, result) => {
-    //         if (error) return console.log("Bad request to db")
-    //         console.log(result.rows[0].user_id)    // display normal result
-    //         return result.rows[0].user_id
-    //     })
-    //     console.log(userID)     // display undefined
-    //     return userID
-    // }
 }
 
 async function addCurrentUser(userID, userName) {
-    let checkCommand = "SELECT * FROM currentUser"
-    let addCommand = "INSERT INTO currentUser (user_id, user_name) VALUES ($1, $2)"
-    await pool.query(checkCommand, async (error, result) => {
-        if (error) return console.log("Bad request to db")
-        let user = [userID, userName]
-        await pool.query(addCommand, user, (error, result) => {
-            if (error) return console.log("Bad request to db")
-        })
+    await models.CurrentUser.findAll({raw: true}).then(async result => {
+        if (result.length !== 0) {
+            await models.CurrentUser.update({user_id: userID, user_name: userName}, {where: {id: 1}})
+                .then(result1 => {})
+                .catch(err => {return console.log(err.message)})
+        } else {
+            await models.CurrentUser.create({id: 1, user_id: userID, user_name: userName})
+                .then(result1 => {})
+                .catch(err => {return console.log(err.message)})
+        }
+    }).catch(err => {
+        return console.log(err.message)
     })
 }
 
